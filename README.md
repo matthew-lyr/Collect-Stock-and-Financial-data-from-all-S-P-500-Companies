@@ -2,7 +2,7 @@
 The main purpose of this program is to easily collect relevant financial and stock price information for all companies in S&P 500 for data scraping. 
 The future development includes further covering all publicly traded companies.
 
-How to use:
+### How to use:
 
 Create an object
 ```

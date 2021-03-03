@@ -15,11 +15,13 @@ sp500_data.get_ticker_stats(tickers_to_get = ['AAPL','FB'])
 print(sp500_data.ticker_stats)
 ```
 
-Get stats for every company in the S&P 500 company list
+If you don't specify what companies to get, it will get stats for every company in the S&P 500 company list
 ```
 sp500_data.get_ticker_stats()
 print(sp500_data.ticker_stats)
 ```
+
+#### Other types of information:
 
 Get balance sheets for Apple and Facebook
 ```

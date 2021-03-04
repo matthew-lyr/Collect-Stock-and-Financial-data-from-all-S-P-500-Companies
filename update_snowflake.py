@@ -61,9 +61,9 @@ def update(awsAccessKeyId, awsSecretAccessKey, snowflake_user, snowflake_passwor
         conn.cursor().execute(
         """
         create or replace stage stat_stage
-          url = 's3://sp500-snowflake/stat'
+          url = 's3://{}/stat'
           storage_integration = s3_int;
-        """
+        """.format(s3_bucket_name)
         )
 
         conn.cursor().execute(

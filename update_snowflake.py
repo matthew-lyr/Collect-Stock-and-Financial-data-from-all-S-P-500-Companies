@@ -16,6 +16,7 @@ def update(awsAccessKeyId, awsSecretAccessKey, snowflake_user, snowflake_passwor
 
 
     sp500_data = sp500_data_collector()
+#     sp500_data.tickers_list = ['AAPL','FB']
     sp500_data.get_ticker_stats()
     sp500_data.get_stock_prices(start_date = stock_price_start_date, end_date = stock_price_end_date, interval = stock_price_interval)
 
@@ -138,29 +139,29 @@ def update(awsAccessKeyId, awsSecretAccessKey, snowflake_user, snowflake_passwor
         print("create pipes")
         conn.cursor().execute(
         """
-        create or replace pipe FINANCE.PUBLIC.stats_pipe auto_ingest=true as
-          copy into FINANCE.PUBLIC.stats
-          from @FINANCE.PUBLIC.stat_stage
+        create or replace pipe {}.{}.stats_pipe auto_ingest=true as
+          copy into {}.{}.stats
+          from @{}.{}.stat_stage
           file_format = (type = 'CSV' skip_header = 1);
-        """
+        """.format(snowflake_database,snowflake_schema,snowflake_database,snowflake_schema,snowflake_database,snowflake_schema)
         )
 
         conn.cursor().execute(
         """    
-        create or replace pipe FINANCE.PUBLIC.stock_prices_pipe auto_ingest=true as
-          copy into FINANCE.PUBLIC.stock_prices
-          from @FINANCE.PUBLIC.stock_prices_stage
+        create or replace pipe {}.{}.stock_prices_pipe auto_ingest=true as
+          copy into {}.{}.stock_prices
+          from @{}.{}.stock_prices_stage
           file_format = (type = 'CSV' skip_header = 1);
-        """
+        """.format(snowflake_database,snowflake_schema,snowflake_database,snowflake_schema,snowflake_database,snowflake_schema)
         )
 
         conn.cursor().execute(
         """
-        create or replace pipe FINANCE.PUBLIC.ticker_summary_pipe auto_ingest=true as
-          copy into FINANCE.PUBLIC.ticker_summary
-          from @FINANCE.PUBLIC.tickers_summary_stage
+        create or replace pipe {}.{}.ticker_summary_pipe auto_ingest=true as
+          copy into {}.{}.ticker_summary
+          from @{}.{}.tickers_summary_stage
           file_format = (type = 'CSV' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY='"');
-        """
+        """.format(snowflake_database,snowflake_schema,snowflake_database,snowflake_schema,snowflake_database,snowflake_schema)
         )
         
         print("create views")
@@ -226,11 +227,11 @@ def update(awsAccessKeyId, awsSecretAccessKey, snowflake_user, snowflake_passwor
         
         conn.cursor().execute(
         """           
-        create or replace view FINANCE.PUBLIC.UNIQUE_DATE_VIEW as 
+        create or replace view {}.{}.UNIQUE_DATE_VIEW as 
         select 
         distinct PROCESS_DATE as PROCESS_DATE
         from stock_prices;       
-        """
+        """.format(snowflake_database,snowflake_schema)
         )      
     else:
         print('emptying tickers_summary folder in the s3 bucket')
